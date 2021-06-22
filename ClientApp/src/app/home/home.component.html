@@ -1,0 +1,86 @@
+<div style="text-align: left">
+  <a (click)="newMember(addModal,$event)"
+     class="btn btn-success btn-raised"
+     placement="top">
+    <span class="mr-1"><i class="ft-plus-square"></i></span>{{ "Add New" }}
+  </a>
+</div>
+
+<div class="table-responsive">
+  <ngx-datatable [rows]="members"
+                 [rowHeight]="50"
+                 class="material"
+                 [limit]="pager.pageSize"
+                 [offset]="pager.page - 1"
+                 [count]="pager.total"
+                 [loadingIndicator]="loadingIndicator"
+                 [externalPaging]="true"
+                 [columnMode]="ColumnMode.force"
+                 [headerHeight]="50"
+                 [footerHeight]="50"
+                 (page)="setPage($event)">
+
+    <ngx-datatable-column name="Name"
+                          prop="name"
+                          [width]="100">
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Actions"
+                          [width]="140"
+                          class="text-center">
+      <ng-template let-member="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+        <a class="btn btn-danger btn-raised"
+           data-original-title=""
+           (click)="onActiveSubmit(member.id,$event)"
+           placement="top">
+          <span class="mr-1"><i class="ft-plus-square"></i></span>{{ "Delete" }}
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+
+  <select class="custom-select" style="width: auto;float:right;" name="pageSize" [(ngModel)]="pager.pageSize" (change)="onPageSizeChanged()">
+    <option [ngValue]="10">10 items per page</option>
+    <option [ngValue]="20">20 items per page</option>
+    <option [ngValue]="50">50 items per page</option>
+  </select>
+</div>
+
+<ng-template #addModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Add Member</h4>
+    <button type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="addMember" (ngSubmit)="onSubmit($event)">
+    <div class="modal-body">
+      <div class="mb-3">
+        <div class="form-row">
+          <div class="col-md-4 d-flex align-items-center justify-content-start">
+            <h6>Name :</h6>
+          </div>
+
+          <div class="col-md-8">
+            <input class="form-control"
+                   formControlName="name"
+                   id="name"
+                   placeholder="Enter Name"
+                   [ngClass]="{'form-submitted': formSubmitted}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-warning">
+        Add
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        {{ "Close" }}
+      </button>
+    </div>
+  </form>
+</ng-template>
